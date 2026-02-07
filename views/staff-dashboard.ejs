@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Dashboard - EduIF</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      min-height: 100vh;
+      color: #333;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .header h1 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 24px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .user-badge {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .logout-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      background: #c0392b;
+      transform: translateY(-2px);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 12px 24px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 2px solid transparent;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .tab-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .tab-btn.active {
+      background: white;
+      color: #f5576c;
+      border-color: #f5576c;
+    }
+
+    .content-section {
+      display: none;
+    }
+
+    .content-section.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .card {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .card h2 {
+      color: #f5576c;
+      margin-bottom: 20px;
+      font-size: 22px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .feature-box {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(245, 87, 108, 0.3);
+    }
+
+    .feature-box h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .feature-box p {
+      font-size: 14px;
+      opacity: 0.95;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    table th {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      padding: 15px;
+      text-align: left;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    table td {
+      padding: 15px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    table tr:hover {
+      background: #f5f5f5;
+    }
+
+    .welcome-banner {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 20px rgba(245, 87, 108, 0.3);
+    }
+
+    .welcome-banner h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .welcome-banner p {
+      opacity: 0.95;
+      font-size: 15px;
+    }
+
+    .access-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+      }
+
+      .tabs {
+        flex-direction: column;
+      }
+
+      .tab-btn {
+        width: 100%;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>👨‍🏫 EduIF Staff Portal</h1>
+    <div class="user-info">
+      <div class="user-badge">👨‍🏫 <%= user.name %> (STAFF)</div>
+      <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="welcome-banner">
+      <h1>Welcome, <%= user.name %>! 👋</h1>
+      <p>You have staff-level access to academic information and student data management.</p>
+      <div class="access-badge">📚 Academic Data Access</div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('overview')">📊 Overview</button>
+      <button class="tab-btn" onclick="switchTab('students')">🎓 Student Data</button>
+      <button class="tab-btn" onclick="switchTab('security')">🔒 Security Info</button>
+    </div>
+
+    <!-- Overview Tab -->
+    <div id="overview" class="content-section active">
+      <div class="card">
+        <h2>📌 Your Access Level</h2>
+        <div class="features-grid">
+          <div class="feature-box">
+            <h3>🎓 Student Records</h3>
+            <p>View and manage academic records for students under your supervision.</p>
+          </div>
+          <div class="feature-box">
+            <h3>📚 Course Materials</h3>
+            <p>Access to curriculum and educational resources for teaching.</p>
+          </div>
+          <div class="feature-box">
+            <h3>📊 Performance Data</h3>
+            <p>Monitor and analyze student academic performance metrics.</p>
+          </div>
+          <div class="feature-box">
+            <h3>📝 Grade Management</h3>
+            <p>Manage and record student grades and assessments.</p>
+          </div>
+          <div class="feature-box">
+            <h3>🔒 Data Security</h3>
+            <p>All data encrypted with AES-256 end-to-end encryption.</p>
+          </div>
+          <div class="feature-box">
+            <h3>📋 Activity Logs</h3>
+            <p>Access logs of your own activities for accountability.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Student Data Tab -->
+    <div id="students" class="content-section">
+      <div class="card">
+        <h2>🎓 Student Information</h2>
+        <p style="margin-bottom: 20px; color: #666;">View encrypted student data (requires admin decryption key)</p>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Status</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>🔐 Data Encryption</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Enabled</span></td>
+              <td>All student data encrypted with AES-256</td>
+            </tr>
+            <tr>
+              <td>🔓 Data Access</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Authorized</span></td>
+              <td>Staff members can request data with proper authorization</td>
+            </tr>
+            <tr>
+              <td>📝 Access Logging</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Active</span></td>
+              <td>Every data access is logged for security audit</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>📚 Sample Student Records</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Roll Number</th>
+              <th>Student Name</th>
+              <th>Email</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>STU001</td>
+              <td>Ahmed Hassan</td>
+              <td>ahmed.hassan@eduif.edu</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Active</span></td>
+            </tr>
+            <tr>
+              <td>STU002</td>
+              <td>Fatima Khan</td>
+              <td>fatima.khan@eduif.edu</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Active</span></td>
+            </tr>
+            <tr>
+              <td>STU003</td>
+              <td>Ali Muhammad</td>
+              <td>ali.muhammad@eduif.edu</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Active</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Security Info Tab -->
+    <div id="security" class="content-section">
+      <div class="card">
+        <h2>🔒 Security Features</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Security Feature</th>
+              <th>Status</th>
+              <th>Your Access Level</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>🔐 Password Hashing (SHA-256)</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Active</span></td>
+              <td>Automatic for all users</td>
+            </tr>
+            <tr>
+              <td>🚫 Login Attempt Limit (3 strikes)</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Active</span></td>
+              <td>Protects your account</td>
+            </tr>
+            <tr>
+              <td>👥 Role-Based Access Control</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Active</span></td>
+              <td>Staff - Academic Data + Student Records</td>
+            </tr>
+            <tr>
+              <td>🔓 AES-256 Data Encryption</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Active</span></td>
+              <td>All student data encrypted at rest</td>
+            </tr>
+            <tr>
+              <td>🛡️ Malware Detection</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Active</span></td>
+              <td>Scans file uploads for threats</td>
+            </tr>
+            <tr>
+              <td>📝 Activity Logging</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Active</span></td>
+              <td>Your activities are logged</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>📋 Your Recent Activities</h2>
+        <p style="margin-bottom: 20px; color: #666;">All your activities are securely logged and monitored.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Activity</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Today, 10:30 AM</td>
+              <td>Login</td>
+              <td>Staff portal accessed</td>
+            </tr>
+            <tr>
+              <td>Yesterday, 2:45 PM</td>
+              <td>Data Access</td>
+              <td>Reviewed student grades</td>
+            </tr>
+            <tr>
+              <td>Yesterday, 1:15 PM</td>
+              <td>File Upload</td>
+              <td>Course materials uploaded (scanned)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(tabName) {
+      document.querySelectorAll('.content-section').forEach(el => {
+        el.classList.remove('active');
+      });
+      
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      document.getElementById(tabName).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    async function logout() {
+      await fetch('/api/logout', { method: 'POST' });
+      window.location.href = '/login';
+    }
+  </script>
+</body>
+</html>

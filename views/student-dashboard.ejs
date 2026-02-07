@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard - EduIF</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      min-height: 100vh;
+      color: #333;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .header h1 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 24px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .user-badge {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .logout-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      background: #c0392b;
+      transform: translateY(-2px);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 12px 24px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 2px solid transparent;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .tab-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .tab-btn.active {
+      background: white;
+      color: #00f2fe;
+      border-color: #00f2fe;
+    }
+
+    .content-section {
+      display: none;
+    }
+
+    .content-section.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .card {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .card h2 {
+      color: #00f2fe;
+      margin-bottom: 20px;
+      font-size: 22px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .feature-box {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(79, 172, 254, 0.3);
+    }
+
+    .feature-box h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .feature-box p {
+      font-size: 14px;
+      opacity: 0.95;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    table th {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+      padding: 15px;
+      text-align: left;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    table td {
+      padding: 15px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    table tr:hover {
+      background: #f5f5f5;
+    }
+
+    .welcome-banner {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 20px rgba(79, 172, 254, 0.3);
+    }
+
+    .welcome-banner h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .welcome-banner p {
+      opacity: 0.95;
+      font-size: 15px;
+    }
+
+    .access-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    .info-box {
+      background: #f0f9ff;
+      border-left: 4px solid #00f2fe;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .info-box strong {
+      color: #00a0cc;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+      }
+
+      .tabs {
+        flex-direction: column;
+      }
+
+      .tab-btn {
+        width: 100%;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🎓 EduIF Student Portal</h1>
+    <div class="user-info">
+      <div class="user-badge">👨‍🎓 <%= user.name %> (STUDENT)</div>
+      <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="welcome-banner">
+      <h1>Welcome, <%= user.name %>! 👋</h1>
+      <p>Access your academic information, grades, and coursework through this secure portal.</p>
+      <div class="access-badge">📚 Student Grade & Record Access</div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('overview')">📊 Overview</button>
+      <button class="tab-btn" onclick="switchTab('grades')">📈 Grades</button>
+      <button class="tab-btn" onclick="switchTab('courses')">📚 Courses</button>
+      <button class="tab-btn" onclick="switchTab('security')">🔒 Security</button>
+    </div>
+
+    <!-- Overview Tab -->
+    <div id="overview" class="content-section active">
+      <div class="card">
+        <h2>📌 Your Dashboard</h2>
+        <div class="features-grid">
+          <div class="feature-box">
+            <h3>🎓 View Grades</h3>
+            <p>Check your academic performance and report cards.</p>
+          </div>
+          <div class="feature-box">
+            <h3>📚 Course Materials</h3>
+            <p>Access educational resources and course content.</p>
+          </div>
+          <div class="feature-box">
+            <h3>📅 Schedule</h3>
+            <p>View your class timetable and academic calendar.</p>
+          </div>
+          <div class="feature-box">
+            <h3>🔐 Data Security</h3>
+            <p>Your data is protected with AES-256 encryption.</p>
+          </div>
+          <div class="feature-box">
+            <h3>📝 Assignments</h3>
+            <p>Submit assignments and view feedback securely.</p>
+          </div>
+          <div class="feature-box">
+            <h3>🔔 Notifications</h3>
+            <p>Receive important academic updates and alerts.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>ℹ️ Access Level Information</h2>
+        <div class="info-box">
+          <strong>Your Role:</strong> Student (Limited Access)<br>
+          You can view your own grades, courses, and academic records. Certain administrative features are restricted.
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Access</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>View Own Grades</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Allowed</span></td>
+            </tr>
+            <tr>
+              <td>View Course Materials</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Allowed</span></td>
+            </tr>
+            <tr>
+              <td>Submit Assignments</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Allowed</span></td>
+            </tr>
+            <tr>
+              <td>Edit Own Profile</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Allowed</span></td>
+            </tr>
+            <tr>
+              <td>View Other Students' Data</td>
+              <td><span style="color: #e74c3c; font-weight: 600;">❌ Not Allowed</span></td>
+            </tr>
+            <tr>
+              <td>Access Admin Panel</td>
+              <td><span style="color: #e74c3c; font-weight: 600;">❌ Not Allowed</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Grades Tab -->
+    <div id="grades" class="content-section">
+      <div class="card">
+        <h2>📈 Your Academic Grades</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Course Name</th>
+              <th>Course Code</th>
+              <th>Instructor</th>
+              <th>Grade</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Digital Security Fundamentals</td>
+              <td>SEC101</td>
+              <td>Dr. Ahmed Hassan</td>
+              <td><strong>A</strong></td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Passed</span></td>
+            </tr>
+            <tr>
+              <td>Cryptography Basics</td>
+              <td>SEC102</td>
+              <td>Prof. Fatima Khan</td>
+              <td><strong>A-</strong></td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Passed</span></td>
+            </tr>
+            <tr>
+              <td>Network Security</td>
+              <td>SEC201</td>
+              <td>Dr. Ali Muhammad</td>
+              <td><strong>B+</strong></td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Passed</span></td>
+            </tr>
+            <tr>
+              <td>Data Protection</td>
+              <td>SEC202</td>
+              <td>Prof. Sara Khan</td>
+              <td><strong>A</strong></td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Passed</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>📊 Performance Summary</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Current GPA</td>
+              <td><strong>3.85 / 4.0</strong></td>
+            </tr>
+            <tr>
+              <td>Total Credits Completed</td>
+              <td><strong>45 / 120</strong></td>
+            </tr>
+            <tr>
+              <td>Academic Standing</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Excellent</span></td>
+            </tr>
+            <tr>
+              <td>Graduation Progress</td>
+              <td><strong>37.5%</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Courses Tab -->
+    <div id="courses" class="content-section">
+      <div class="card">
+        <h2>📚 Enrolled Courses</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Course Name</th>
+              <th>Semester</th>
+              <th>Instructor</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Advanced Cybersecurity</td>
+              <td>Spring 2026</td>
+              <td>Dr. Ahmed Hassan</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Active</span></td>
+            </tr>
+            <tr>
+              <td>Ethical Hacking</td>
+              <td>Spring 2026</td>
+              <td>Prof. Fatima Khan</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Active</span></td>
+            </tr>
+            <tr>
+              <td>Cloud Security</td>
+              <td>Spring 2026</td>
+              <td>Dr. Ali Muhammad</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Active</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Security Tab -->
+    <div id="security" class="content-section">
+      <div class="card">
+        <h2>🔒 Your Security Status</h2>
+        <div class="info-box">
+          <strong>⭐ Your data is protected with multiple security layers:</strong><br>
+          Each of your academic records, grades, and personal information is encrypted and secured.
+        </div>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>Security Feature</th>
+              <th>Status</th>
+              <th>Protection Level</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>🔐 Password Hashing (SHA-256)</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Active</span></td>
+              <td>Your password is encrypted with SHA-256</td>
+            </tr>
+            <tr>
+              <td>🚫 Login Attempt Limit</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Active</span></td>
+              <td>Your account locks after 3 failed attempts</td>
+            </tr>
+            <tr>
+              <td>👥 Role-Based Access</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Active</span></td>
+              <td>Student level access enforced</td>
+            </tr>
+            <tr>
+              <td>🔓 Data Encryption (AES-256)</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Active</span></td>
+              <td>All your data encrypted at rest</td>
+            </tr>
+            <tr>
+              <td>📝 Activity Logging</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Active</span></td>
+              <td>All your activities recorded for security</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>🔐 Account Security</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Setting</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Last Login</td>
+              <td>Today at 10:30 AM</td>
+            </tr>
+            <tr>
+              <td>Email Verified</td>
+              <td><span style="color: #27ae60; font-weight: 600;">✅ Yes</span></td>
+            </tr>
+            <tr>
+              <td>Two-Factor Authentication</td>
+              <td><span style="color: #e74c3c; font-weight: 600;">❌ Not Enabled</span></td>
+            </tr>
+            <tr>
+              <td>Active Sessions</td>
+              <td>1 session</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(tabName) {
+      document.querySelectorAll('.content-section').forEach(el => {
+        el.classList.remove('active');
+      });
+      
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      document.getElementById(tabName).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    async function logout() {
+      await fetch('/api/logout', { method: 'POST' });
+      window.location.href = '/login';
+    }
+  </script>
+</body>
+</html>

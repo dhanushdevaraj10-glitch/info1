@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: eduif
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        value: eduif-session-secret-2024
+      - key: PORT
+        generateValue: true

@@ -222,10 +222,20 @@ app.post('/api/logout', (req, res) => {
   res.json({ success: true });
 });
 
-app.listen(PORT, () => {
-  console.log(`\n✅ EduIF Security System running at http://localhost:${PORT}`);
-  console.log(`🔐 Default Credentials:`);
-  console.log(`   Admin: admin / admin123`);
-  console.log(`   Staff: staff / staff123`);
-  console.log(`   Student: student / student123\n`);
+  const server = app.listen(PORT, () => {
+    console.log(`\n✅ EduIF Security System running on PORT ${PORT}`);
+    console.log(`🔐 Default Credentials:`);
+    console.log(`   Admin: admin / admin123`);
+    console.log(`   Staff: staff / staff123`);
+    console.log(`   Student: student / student123\n`);
+  });
+
+  // Error handling
+  server.on('error', (err) => {
+    console.error('❌ Server Error:', err);
+    process.exit(1);
+  });
+
+  process.on('unhandledRejection', (reason, promise) => {
+    console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
 });
